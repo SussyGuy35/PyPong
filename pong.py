@@ -41,12 +41,16 @@ def ball_movement():
         elif abs(ball.top - opponent.bottom)<10 and ball_vsp <0:
             ball_vsp *=-1    
 def player_movement():
+    global player_spd
+    player_spd = (keys[pygame.K_DOWN]-keys[pygame.K_UP])*7
     player.y+= player_spd
     if player.top <= 0:
         player.top = 0
     if player.bottom >= scr_height:
         player.bottom = scr_height
 def player2_movement():
+    global player2_spd
+    player2_spd = (keys[pygame.K_s]-keys[pygame.K_w])*7
     opponent.y+= player2_spd
     if opponent.top <= 0:
         opponent.top = 0
@@ -150,27 +154,13 @@ while True:
             pygame.quit()
             sys.exit()
         if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_DOWN:
-                player_spd = 7
-  
-            if event.key == pygame.K_UP: 
-                player_spd = -7  
             if event.key == pygame.K_TAB:
                 if two_player == True:
                     two_player = False
                 elif two_player == False:
-                    two_player = True                               
-            if event.key == pygame.K_s:
-                if two_player:
-                    player2_spd = 7
-            if event.key == pygame.K_w:
-                if two_player:
-                    player2_spd = -7            
-        if event.type == pygame.KEYUP:
-            if event.key == pygame.K_DOWN or event.key == pygame.K_UP:
-                player_spd = 0 
-            if event.key == pygame.K_w or event.key == pygame.K_s:
-                player2_spd = 0                     
+                    two_player = True                                                   
+    # Lấy input
+    keys = pygame.key.get_pressed()
     #game logic
     ball_movement()
     player_movement()
