@@ -7,7 +7,7 @@ except:
     print("Not using pyinstaller splash screen")
 #Tạo hàm
 def ball_movement():
-    global ball_hsp, ball_vsp, player_score, opponent_score, score_time, player_spd, player2_spd,opponent_spd
+    global ball_hsp, ball_vsp, player_score, opponent_score, score_time, player_spd, player2_spd,opponent_spd, scr_height
     
     ball.centerx += ball_hsp
     ball.centery += ball_vsp
@@ -42,7 +42,8 @@ def ball_movement():
         if abs(ball.left - opponent.right)<10:
             ball_hsp=(ball_hsp*-1)+0.25
             if not two_player:
-                ball_vsp += ((ball.centery - opponent.centery)*opponent_spd)*0.5
+                if opponent.top > 0 and opponent.bottom < scr_height:
+                    ball_vsp += ((ball.centery - opponent.centery)*opponent_spd)*0.5
             elif two_player:
                 ball_vsp += player2_spd*0.5    
         elif abs(ball.bottom - opponent.top)<10 and ball_vsp >0:
