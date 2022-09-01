@@ -7,14 +7,18 @@ except:
     print("Not using pyinstaller splash screen")
 #Tạo hàm
 def ball_movement():
-    global ball_hsp, ball_vsp, player_score, opponent_score, score_time
+    global ball_hsp, ball_vsp, player_score, opponent_score, score_time, player_spd, player2_spd,opponent_spd
     
     ball.centerx += ball_hsp
     ball.centery += ball_vsp
 
-    if ball.top <= 0 or ball.bottom>=scr_height:
+    if ball.top <= 0 and ball_vsp<=0:
         ball_vsp *= -1
         pygame.mixer.Sound.play(pong_sfx)
+    elif ball.bottom>=scr_height and ball_vsp >= 0:
+        ball_vsp *= -1
+        pygame.mixer.Sound.play(pong_sfx)
+
     if ball.left+ball_hsp <= 0:
         player_score+=1
         pygame.mixer.Sound.play(score_sfx)
@@ -27,7 +31,8 @@ def ball_movement():
     if ball.colliderect(player) and ball_hsp >0:
         pygame.mixer.Sound.play(pong_sfx)
         if abs(ball.right - player.left)<10:
-            ball_hsp*=-1
+            ball_hsp=(ball_hsp*-1)+0.25
+            ball_vsp += player_spd*0.5
         elif abs(ball.bottom - player.top)<10 and ball_vsp >0:
             ball_vsp *=-1    
         elif abs(ball.top - player.bottom)<10 and ball_vsp <0:
@@ -35,7 +40,11 @@ def ball_movement():
     if ball.colliderect(opponent) and ball_hsp<0:
         pygame.mixer.Sound.play(pong_sfx)
         if abs(ball.left - opponent.right)<10:
-            ball_hsp*=-1    
+            ball_hsp=(ball_hsp*-1)+0.25
+            if not two_player:
+                ball_vsp += ((ball.centery - opponent.centery)*opponent_spd)*0.5
+            elif two_player:
+                ball_vsp += player2_spd*0.5    
         elif abs(ball.bottom - opponent.top)<10 and ball_vsp >0:
             ball_vsp *=-1    
         elif abs(ball.top - opponent.bottom)<10 and ball_vsp <0:
@@ -46,16 +55,20 @@ def player_movement():
     player.y+= player_spd
     if player.top <= 0:
         player.top = 0
+        player_spd = 0
     if player.bottom >= scr_height:
         player.bottom = scr_height
+        player_spd = 0
 def player2_movement():
     global player2_spd
     player2_spd = (keys[pygame.K_s]-keys[pygame.K_w])*7
     opponent.y+= player2_spd
     if opponent.top <= 0:
         opponent.top = 0
+        player2_spd = 0
     if opponent.bottom >= scr_height:
         opponent.bottom = scr_height
+        player2_spd = 0
 def opponent_ai():
     global opponent_spd
     opponent.centery += (ball.centery - opponent.centery)*opponent_spd
@@ -83,16 +96,17 @@ def ball_start():
         ball_hsp, ball_vsp = 0, 0
     else:
         ball_hsp = random.choice((4,-4,5,-5,6,-6))
-        ball_vsp = random.choice((4,-4,5,-5,6,-6))
-        opponent_spd = random.choice((0.05,0.1,0.15))
+        ball_vsp = random.choice((4,-4,5,-5))
+        opponent_spd = random.choice((0.15,0.2))
         score_time = None
 def check_game_restart():
     global player_score, opponent_score, score_time, scr_height
-    if player_score == 5 or opponent_score == 5:
+    if player_score == 10 or opponent_score == 10:
         ball_start()
         player_score = 0
         opponent_score = 0 
         player.centery = scr_height/2   
+        opponent.centery = scr_height/2 
 def resource_path(relative_path):
     """ Get absolute path to resource, works for dev and for PyInstaller """
     try:
@@ -128,10 +142,10 @@ white = (255,255,255)
 line_col = (105,105,105)
     #bruh
 ball_hsp = random.choice((-4,-5,-6))
-ball_vsp = random.choice((4,-4,5,-5,6,-6))   
+ball_vsp = random.choice((4,-4))   
 player_spd = 0
 player2_spd = 0
-opponent_spd = random.choice((0.05,0.1))
+opponent_spd = random.choice((0.15,0.2))
 two_player = False
 
     # Chữ lmao
