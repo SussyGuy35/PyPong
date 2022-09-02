@@ -52,7 +52,7 @@ def ball_movement():
             ball_vsp *=-1    
 def player_movement():
     global player_spd
-    player_spd = (keys[pygame.K_DOWN]-keys[pygame.K_UP])*7
+    player_spd = (keys[pygame.K_DOWN]-keys[pygame.K_UP])*10
     player.y+= player_spd
     if player.top <= 0:
         player.top = 0
@@ -62,7 +62,7 @@ def player_movement():
         player_spd = 0
 def player2_movement():
     global player2_spd
-    player2_spd = (keys[pygame.K_s]-keys[pygame.K_w])*7
+    player2_spd = (keys[pygame.K_s]-keys[pygame.K_w])*10
     opponent.y+= player2_spd
     if opponent.top <= 0:
         opponent.top = 0
